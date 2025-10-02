@@ -1,56 +1,88 @@
+# =========================
 # Logs
-logs/
+# =========================
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
+yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
+# =========================
 # Dependências
+# =========================
 node_modules/
 .npm
 .yarn-integrity
 
+# =========================
+# Build outputs / distribuíveis
+# =========================
+dist/
+dist-ssr/
+frontend/dist/
+frontend/dist/win-unpacked/
+*.asar
+*.exe
+*.tsbuildinfo
+
+# =========================
 # Environment variables
+# =========================
 .env
 .env.local
 .env.*.local
 
-# Cache / Temp
+# =========================
+# Cache
+# =========================
 .cache/
 .temp/
 
-# Editor / IDE
+# =========================
+# Editor
+# =========================
 .vscode/*
 !.vscode/extensions.json
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 *.swp
 *.swo
 
+# =========================
 # Sistema
+# =========================
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-Thumbs.db
 ehthumbs.db
+Thumbs.db
 Icon?
 
-# Runtime / PID
-pids/
+# =========================
+# Runtime data
+# =========================
+pids
 *.pid
 *.seed
 *.pid.lock
 
-# Coverage / Testes
+# =========================
+# Coverage
+# =========================
 coverage/
 *.lcov
 
-# Electron / React extras (não inclui build final)
-out/
-release/
-electron-debug.log
-
-# Optional: arquivos temporários do Node
-npm-debug.log*
-yarn-debug.log*
+# =========================
+# Outros arquivos temporários
+# =========================
+*.log
+*.tmp
+*.temp
+*.bak
