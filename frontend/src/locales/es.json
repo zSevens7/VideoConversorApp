@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Conversor de Video"
+  },
+  "language": {
+    "portuguese": "Portugués",
+    "english": "Inglés",
+    "spanish": "Español"
+  },
+  "fileSelector": {
+    "title": "Selección de Archivos",
+    "inputLabel": "Video de Entrada:",
+    "inputPlaceholder": "Seleccione el video a convertir...",
+    "outputLabel": "Carpeta de Salida:",
+    "outputPlaceholder": "Seleccione donde guardar el video...",
+    "browse": "Examinar",
+    "ready": "✅ Archivos seleccionados y listos para la conversión!"
+  },
+  "gpuSettings": {
+    "title": "Configuraciones de Procesamiento",
+    "gpuMemoryLabel": "Memoria GPU a Usar (MB):",
+    "gpuMemoryHint": "No exceda la memoria disponible de su GPU",
+    "scaleLabel": "Escala de Mejora:",
+    "scaleHint": "Factor de aumento de resolución"
+  },
+  "progress": {
+    "title": "Progreso",
+    "converting": "Convirtiendo...",
+    "doNotClose": "No cierre la aplicación"
+  },
+  "logs": {
+    "title": "Registros de Procesamiento",
+    "waiting": "Esperando el inicio de la conversión..."
+  },
+  "buttons": {
+    "start": "Iniciar Conversión",
+    "cancel": "Cancelar",
+    "converting": "Convirtiendo..."
+  },
+  "systemInfo": {
+    "title": "Información del Sistema",
+    "mode": "Modo:",
+    "gpu": "GPU:",
+    "language": "Idioma:",
+    "production": "Producción",
+    "development": "Desarrollo",
+    "gpuEnabled": "Aceleración activa",
+    "gpuDisabled": "Solo CPU"
+  },
+  "messages": {
+    "simulation": "🔧 Modo desarrollo: Simulando conversión...",
+    "error": "❌ Error: ¡Seleccione los archivos de entrada y salida!",
+    "canceled": "⏹️ Conversión cancelada por el usuario",
+    "completed": "✅ ¡Conversión completada con éxito!",
+    "extractingFrames": "📥 Extrayendo frames del video...",
+    "framesExtracted": "✅ Frames extraídos con éxito",
+    "startingUpscale": "🎮 Iniciando mejora en GPU...",
+    "processingFrames": "🔥 Procesando frames...",
+    "creatingVideo": "📹 Creando video final...",
+    "addingAudio": "🔊 Agregando audio..."
+  }
+}

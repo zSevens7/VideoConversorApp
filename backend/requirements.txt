@@ -1,0 +1,27 @@
+# =============================================
+# Conversor de Vídeo com Upscale - Dependências
+# =============================================
+
+# Dependências CORE (obrigatórias)
+opencv-python==4.8.1.78          # Processamento de vídeo e imagem
+Pillow==10.0.0                   # Manipulação de imagens
+numpy==1.24.3                    # Computação numérica
+
+# Processamento de Áudio/Vídeo (obrigatório para áudio)
+moviepy==1.0.3                   # Edição de vídeo e áudio
+imageio==2.31.1                  # Suporte a formatos de imagem (dependência do moviepy)
+imageio-ffmpeg==0.4.8            # FFmpeg para moviepy
+
+# Alternativa para FFmpeg (opcional)
+ffmpeg-python==0.2.0             # Interface Python para FFmpeg
+
+# Melhoria de performance (recomendado)
+scipy==1.10.1                    # Processamento científico
+scikit-image==0.21.0             # Processamento de imagem avançado
+
+# Utilitários (opcionais)
+tqdm==4.66.1                     # Barras de progresso
+psutil==5.9.6                    # Monitoramento de sistema
+
+# Para desenvolvimento (opcional)
+colorama==0.4.6                  # Cores no terminal

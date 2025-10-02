@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Video Converter"
+  },
+  "language": {
+    "portuguese": "Portuguese",
+    "english": "English", 
+    "spanish": "Spanish"
+  },
+  "fileSelector": {
+    "title": "File Selection",
+    "inputLabel": "Input Video:",
+    "inputPlaceholder": "Select the video to convert...",
+    "outputLabel": "Output Folder:",
+    "outputPlaceholder": "Select where to save the video...",
+    "browse": "Browse",
+    "ready": "✅ Files selected and ready for conversion!"
+  },
+  "gpuSettings": {
+    "title": "Processing Settings",
+    "gpuMemoryLabel": "GPU Memory to Use (MB):",
+    "gpuMemoryHint": "Do not exceed your GPU's available memory",
+    "scaleLabel": "Upscale Scale:",
+    "scaleHint": "Resolution increase factor"
+  },
+  "progress": {
+    "title": "Progress",
+    "converting": "Converting...",
+    "doNotClose": "Do not close the application"
+  },
+  "logs": {
+    "title": "Processing Logs", 
+    "waiting": "Waiting for conversion to start..."
+  },
+  "buttons": {
+    "start": "Start Conversion",
+    "cancel": "Cancel",
+    "converting": "Converting..."
+  },
+  "systemInfo": {
+    "title": "System Information",
+    "mode": "Mode:",
+    "gpu": "GPU:",
+    "language": "Language:",
+    "production": "Production",
+    "development": "Development", 
+    "gpuEnabled": "Acceleration active",
+    "gpuDisabled": "CPU only"
+  },
+  "messages": {
+    "simulation": "🔧 Development mode: Simulating conversion...",
+    "error": "❌ Error: Select input and output files!",
+    "canceled": "⏹️ Conversion canceled by user",
+    "completed": "✅ Conversion completed successfully!",
+    "extractingFrames": "📥 Extracting video frames...",
+    "framesExtracted": "✅ Frames extracted successfully",
+    "startingUpscale": "🎮 Starting GPU upscale...",
+    "processingFrames": "🔥 Processing frames...",
+    "creatingVideo": "📹 Creating final video...",
+    "addingAudio": "🔊 Adding audio..."
+  }
+}

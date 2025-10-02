@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+venv311/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Arquivos temporários do projeto
+tmp_frames/
+temp_audio.*
+
+# Pasta de uploads (opcional - se não quiser commitar os vídeos)
+uploads/*
+
+# Pasta de outputs (opcional - se não quiser commitar os vídeos processados)
+outputs/*
+
+# Mas mantém as pastas vazias
+uploads/.gitkeep
+outputs/.gitkeep
+
+realesrgan_portable/**/*.bin
+realesrgan_portable/**/*.param

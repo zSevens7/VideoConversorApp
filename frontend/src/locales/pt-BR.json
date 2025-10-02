@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Video Converter"
+  },
+  "language": {
+    "portuguese": "Português",
+    "english": "Inglês",
+    "spanish": "Espanhol"
+  },
+  "fileSelector": {
+    "title": "Seleção de Arquivos",
+    "inputLabel": "Vídeo de Entrada:",
+    "inputPlaceholder": "Selecione o vídeo para converter...",
+    "outputLabel": "Pasta de Saída:",
+    "outputPlaceholder": "Selecione onde salvar o vídeo...",
+    "browse": "Procurar",
+    "ready": "✅ Arquivos selecionados e prontos para conversão!"
+  },
+  "gpuSettings": {
+    "title": "Configurações de Processamento",
+    "gpuMemoryLabel": "Memória GPU a Usar (MB):",
+    "gpuMemoryHint": "Não exceda a memória disponível da sua placa",
+    "scaleLabel": "Escala de Upscale:",
+    "scaleHint": "Fator de aumento da resolução"
+  },
+  "progress": {
+    "title": "Progresso",
+    "converting": "Convertendo...",
+    "doNotClose": "Não feche o aplicativo"
+  },
+  "logs": {
+    "title": "Logs do Processamento",
+    "waiting": "Aguardando início da conversão..."
+  },
+  "buttons": {
+    "start": "Iniciar Conversão",
+    "cancel": "Cancelar",
+    "converting": "Convertendo..."
+  },
+  "systemInfo": {
+    "title": "Informações do Sistema",
+    "mode": "Modo:",
+    "gpu": "GPU:",
+    "language": "Idioma:",
+    "production": "Produção",
+    "development": "Desenvolvimento",
+    "gpuEnabled": "Aceleração ativa",
+    "gpuDisabled": "CPU apenas"
+  },
+  "messages": {
+    "simulation": "🔧 Modo de desenvolvimento: Simulando conversão...",
+    "error": "❌ Erro: Selecione os arquivos de entrada e saída!",
+    "canceled": "⏹️ Conversão cancelada pelo usuário",
+    "completed": "✅ Conversão concluída com sucesso!",
+    "extractingFrames": "📥 Extraindo frames do vídeo...",
+    "framesExtracted": "✅ Frames extraídos com sucesso",
+    "startingUpscale": "🎮 Iniciando upscale na GPU...",
+    "processingFrames": "🔥 Processando frames...",
+    "creatingVideo": "📹 Montando vídeo final...",
+    "addingAudio": "🔊 Adicionando áudio..."
+  }
+}
