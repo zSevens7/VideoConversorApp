@@ -6,8 +6,6 @@ Aplicativo desktop que realiza upscale de vídeos usando IA (Real-ESRGAN), prese
 
 **Tecnologias:** React + Electron + TypeScript + Tailwind (Frontend), Python (Backend)
 
-🔗 [Repositório no GitHub](#)
-
 ---
 
 ## Descrição Longa
