@@ -34,7 +34,9 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [isSystemInfoOpen, setIsSystemInfoOpen] = useState(false);
   const [isLogsOpen, setIsLogsOpen] = useState(true); // Logs abertos por padrão no desktop
-  
+
+  const [outputFilename, setOutputFilename] = useState<string>('saida.mp4'); // Novo campo: nome do arquivo
+
   // Referências para tracking de tempo
   const startTimeRef = useRef<number>(0);
   const intervalRef = useRef<NodeJS.Timeout>();
@@ -43,12 +45,10 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
     setConfig((prev: Partial<ConversionConfig>) => ({ ...prev, ...updates }));
   }, []);
 
-  // Função auxiliar para adicionar logs de forma segura
   const addLog = useCallback((message: string) => {
     setLogs((prev: string[]) => [...prev, message]);
   }, []);
 
-  // Iniciar timer quando começar conversão
   const startConversionTimer = () => {
     startTimeRef.current = Date.now();
     setMetrics({
@@ -61,7 +61,6 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
       currentStage: 'starting'
     });
 
-    // Atualizar tempo decorrido a cada segundo
     intervalRef.current = setInterval(() => {
       const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
       setMetrics((prev: Metrics | null) => { 
@@ -75,7 +74,6 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
     }, 1000);
   };
 
-  // Parar timer quando terminar
   const stopConversionTimer = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -84,11 +82,12 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
   };
 
   const handleStartConversion = async () => {
-    if (!config.inputPath || !config.outputPath) {
+    if (!config.inputPath || !config.outputPath || !outputFilename) {
       addLog(t.messages.error);
       return;
     }
 
+    const fullOutputPath = `${config.outputPath}\\${outputFilename}`;
     setIsConverting(true);
     setProgress(0);
     setLogs([]);
@@ -101,13 +100,12 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
       totalFrames: 0,
       currentStage: 'starting'
     });
-    
-    // Iniciar timer
+
     startConversionTimer();
-    
+
     try {
       if (window.electronAPI) {
-        await window.electronAPI.startConversion(config as ConversionConfig);
+        await window.electronAPI.startConversion({ ...config, outputPath: fullOutputPath } as ConversionConfig);
       } else {
         addLog(t.messages.simulation);
         simulateConversion();
@@ -119,16 +117,15 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
     }
   };
 
-  // Simulação para desenvolvimento
   const simulateConversion = () => {
     let simulatedProgress = 0;
     const totalFrames = 250;
     let frameCount = 0;
-    
+
     const interval = setInterval(() => {
       simulatedProgress += 2;
       frameCount += 5;
-      
+
       setProgress(simulatedProgress);
 
       if (simulatedProgress === 10) addLog(t.messages.extractingFrames);
@@ -170,80 +167,25 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
     addLog(t.messages.canceled);
   };
 
-  // Escutar progresso do Electron
   useEffect(() => {
     if (!window.electronAPI) return;
 
     const handleProgress = (data: ProgressData) => {
       if (data.type === 'progress' && data.progress !== undefined) {
-        const newProgress = Math.min(data.progress, 100);
-        setProgress(newProgress);
+        setProgress(Math.min(data.progress, 100));
       }
-      
+
       if (data.type === 'metrics' && data.metrics) {
         setMetrics((prev: Metrics | null) => {
           if (!prev) return { ...data.metrics } as Metrics;
-          return {
-            ...prev,
-            ...data.metrics,
-            elapsed: prev.elapsed || 0,
-            eta: prev.eta || 0
-          };
+          return { ...prev, ...data.metrics, elapsed: prev.elapsed || 0, eta: prev.eta || 0 };
         });
       }
-      
+
       if (data.message && typeof data.message === 'string') {
         addLog(data.message);
-        
-        const frameMatch = data.message.match(/Processados\s+(\d+)\/(\d+)\s+frames/);
-        if (frameMatch) {
-          const [, processed, total] = frameMatch;
-          setMetrics((prev: Metrics | null) => {
-            if (!prev) return null;
-            return {
-              ...prev,
-              framesProcessed: parseInt(processed),
-              totalFrames: parseInt(total)
-            };
-          });
-        }
-        
-        const extractedMatch = data.message.match(/Extraídos\s+(\d+)\s+frames/);
-        if (extractedMatch) {
-          const [, extracted] = extractedMatch;
-          setMetrics((prev: Metrics | null) => {
-            if (!prev) return null;
-            return {
-              ...prev,
-              framesProcessed: parseInt(extracted),
-              currentStage: 'extracting_frames'
-            };
-          });
-        }
-        
-        if (data.message.includes('Extraindo frames')) {
-          setMetrics((prev: Metrics | null) => {
-            if (!prev) return null;
-            return { ...prev, currentStage: 'extracting_frames' };
-          });
-        } else if (data.message.includes('Iniciando upscale')) {
-          setMetrics((prev: Metrics | null) => {
-            if (!prev) return null;
-            return { ...prev, currentStage: 'upscaling' };
-          });
-        } else if (data.message.includes('Montando vídeo')) {
-          setMetrics((prev: Metrics | null) => {
-            if (!prev) return null;
-            return { ...prev, currentStage: 'video_assembly' };
-          });
-        } else if (data.message.includes('Adicionando áudio')) {
-          setMetrics((prev: Metrics | null) => {
-            if (!prev) return null;
-            return { ...prev, currentStage: 'adding_audio' };
-          });
-        }
       }
-      
+
       if (data.type === 'complete') {
         setIsConverting(false);
         setProgress(100);
@@ -254,7 +196,7 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
         stopConversionTimer();
         addLog(t.messages.completed);
       }
-      
+
       if (data.type === 'error' && data.message) {
         setIsConverting(false);
         stopConversionTimer();
@@ -263,23 +205,19 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
     };
 
     window.electronAPI.onConversionProgress(handleProgress);
-    
+
     return () => {
       window.electronAPI?.removeAllListeners('conversion-progress');
       stopConversionTimer();
     };
   }, [addLog, t]);
 
-  // Calcular FPS em tempo real
   useEffect(() => {
     if (metrics?.framesProcessed && metrics.framesProcessed > 0 && metrics?.elapsed && metrics.elapsed > 0) {
       const currentFps = metrics.framesProcessed / metrics.elapsed;
       setMetrics((prev: Metrics | null) => {
         if (!prev) return null;
-        return { 
-          ...prev, 
-          currentFps: Math.round(currentFps * 10) / 10
-        };
+        return { ...prev, currentFps: Math.round(currentFps * 10) / 10 };
       });
     }
   }, [metrics?.framesProcessed, metrics?.elapsed]);
@@ -287,27 +225,24 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
   const isReady = Boolean(
     config.inputPath && 
     config.outputPath && 
+    outputFilename &&
     config.gpuMemory && 
     config.scale
   );
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Status Banner */}
       {isConverting && (
         <div className="bg-blue-500/20 border border-blue-500/30 rounded-xl p-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
             <span className="font-semibold">{t.progress.converting}</span>
           </div>
-          <span className="text-sm text-blue-300 hidden sm:block">
-            {t.progress.doNotClose}
-          </span>
+          <span className="text-sm text-blue-300 hidden sm:block">{t.progress.doNotClose}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Coluna Esquerda */}
         <div className="space-y-6">
           <FileSelector
             inputPath={config.inputPath || ''}
@@ -316,6 +251,18 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
             onOutputPathChange={(path: string) => handleConfigUpdate({ outputPath: path })}
             t={t.fileSelector}
           />
+
+          {/* Novo input para nome do arquivo */}
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-400 mb-1">Nome do arquivo de saída:</label>
+            <input
+              type="text"
+              value={outputFilename}
+              onChange={(e) => setOutputFilename(e.target.value)}
+              placeholder="saida.mp4"
+              className="px-3 py-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
           <GpuSettings
             gpuMemory={config.gpuMemory || 6000}
@@ -326,16 +273,9 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
           />
         </div>
 
-        {/* Coluna Direita */}
         <div className="space-y-6">
-          <ProgressBar 
-            progress={progress} 
-            metrics={metrics}
-            isConverting={isConverting}
-            t={t.progress}
-          />
+          <ProgressBar progress={progress} metrics={metrics} isConverting={isConverting} t={t.progress} />
 
-          {/* Logs Expansível - Mobile Friendly */}
           <div className="bg-gray-800/50 rounded-xl border border-gray-700/30 overflow-hidden">
             <button
               onClick={() => setIsLogsOpen(!isLogsOpen)}
@@ -349,17 +289,12 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
                 <span className="text-xs text-gray-400 bg-gray-700/50 px-2 py-1 rounded-full hidden sm:block">
                   {isLogsOpen ? 'Recolher' : 'Expandir'}
                 </span>
-                <div className={`transform transition-transform duration-300 ${
-                  isLogsOpen ? 'rotate-180' : 'rotate-0'
-                }`}>
+                <div className={`transform transition-transform duration-300 ${isLogsOpen ? 'rotate-180' : 'rotate-0'}`}>
                   <span className="text-gray-400">▼</span>
                 </div>
               </div>
             </button>
-
-            <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
-              isLogsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-            }`}>
+            <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isLogsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="p-4 border-t border-gray-700/30">
                 <Logs logs={logs} t={t.logs} />
               </div>
@@ -368,7 +303,6 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
         </div>
       </div>
 
-      {/* Botões de Ação */}
       <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 pt-4 border-t border-gray-700/50">
         <button
           onClick={handleStartConversion}
@@ -387,7 +321,7 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
             </div>
           )}
         </button>
-        
+
         {isConverting && (
           <button
             onClick={handleCancelConversion}
@@ -401,7 +335,6 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
         )}
       </div>
 
-      {/* Informações do Sistema - Aba Expansível */}
       <div className="bg-gray-800/50 rounded-xl border border-gray-700/30 overflow-hidden">
         <button
           onClick={() => setIsSystemInfoOpen(!isSystemInfoOpen)}
@@ -415,17 +348,13 @@ export const VideoConverter: React.FC<VideoConverterProps> = ({ t, language }) =
             <span className="text-xs text-gray-400 bg-gray-700/50 px-2 py-1 rounded-full hidden sm:block">
               {isSystemInfoOpen ? 'Recolher' : 'Expandir'}
             </span>
-            <div className={`transform transition-transform duration-300 ${
-              isSystemInfoOpen ? 'rotate-180' : 'rotate-0'
-            }`}>
+            <div className={`transform transition-transform duration-300 ${isSystemInfoOpen ? 'rotate-180' : 'rotate-0'}`}>
               <span className="text-gray-400">▼</span>
             </div>
           </div>
         </button>
 
-        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
-          isSystemInfoOpen ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
+        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isSystemInfoOpen ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'}`}>
           <div className="p-4 pt-2 border-t border-gray-700/30">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div className="flex flex-col">

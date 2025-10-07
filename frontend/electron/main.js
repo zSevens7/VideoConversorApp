@@ -335,6 +335,11 @@ ipcMain.handle('start-conversion', async (event, config) => {
     throw new Error(errorMsg);
   }
 
+  // 🔥 ADICIONE ESTA LINHA - Garante que a memória GPU seja enviada
+  config.gpuMemory = config.gpuMemory || 8000; // Default 8000MB se não especificado
+  
+  console.log('🎮 Memória GPU configurada:', config.gpuMemory, 'MB');
+
   // Verificar se o arquivo de entrada existe
   if (!fs.existsSync(config.inputPath)) {
     const errorMsg = `Arquivo de entrada não encontrado: ${config.inputPath}`;
