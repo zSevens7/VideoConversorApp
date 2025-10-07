@@ -46,6 +46,18 @@ O **Video Converter** é um aplicativo completo para conversão e upscale de ví
 
 ---
 
+### 🔗 Repositório Real-ESRGAN
+
+O **Video Converter** utiliza o **Real-ESRGAN** como motor de upscale de vídeos.  
+Caso você queira usar ou estudar diretamente, o repositório oficial está disponível em:  
+
+[Real-ESRGAN GitHub](https://github.com/xinntao/Real-ESRGAN)
+
+> 💡 Observação: É necessário seguir as instruções do Real-ESRGAN para instalação e dependências se quiser rodar o upscale fora do Video Converter.  
+
+---
+
+
 ## Observações Importantes
 
 1. É **necessário ter um computador com boa capacidade de GPU e CPU** para rodar o aplicativo de forma eficiente.
