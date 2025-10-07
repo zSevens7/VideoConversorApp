@@ -49,7 +49,16 @@ O **Video Converter** é um aplicativo completo para conversão e upscale de ví
 ## Observações Importantes
 
 1. É **necessário ter um computador com boa capacidade de GPU e CPU** para rodar o aplicativo de forma eficiente.
-2. A configuração de backend/scripts/upscale.py foi feita com base no computador do desenvolvedor. O arquivo define a função `choose_optimal_settings`:
+2. A configuração de `backend/scripts/upscale.py` foi feita com base no computador do desenvolvedor.  
+O arquivo define a função `choose_optimal_settings`.
+
+💡 **Observação prática:**  
+- Meu setup: **Intel i5-11400F** + **NVIDIA RTX 4060**.  
+- Na prática, só consegui usar **até 2 threads por execução** sem travamentos significativos.  
+- Durante o processamento, a CPU ficava entre **70% e 95%** de uso.  
+- Eu deixei no código como **1 thread**, o mais básico possível.  
+- Ultrapassar esses limites tende a causar sobrecarga e não é recomendado.
+
 
 ```python
 def choose_optimal_settings(gpu_memory_mb):
